@@ -122,33 +122,31 @@ public class Main {
             }
             System.out.println("Все ОК! Файл открыт!\n\n");
 
-            for (int nline=0; nline < check.size(); nline++ )
-            {
-                String line = check.get(nline);
-                String hour = "";
-                String minute = "";
-                String second = "";
+            for (String line : check) {
+                StringBuilder hour = new StringBuilder();
+                StringBuilder minute = new StringBuilder();
+                StringBuilder second = new StringBuilder();
                 int spaceCounter = 0;
-                if (line.charAt(0) != ' ' /*&& line.charAt(0) != NULL*/) {
-                    for (int i = 0; i < line.length(); i++)
-                    {
+                if (line != null && !line.trim().isEmpty() /*&& line.charAt(0) != NULL*/) {
+                    for (int i = 0; i < line.length(); i++) {
                         if (line.charAt(i) == ' ') spaceCounter += 1;
-                        if (spaceCounter == 0)hour += line.charAt(i);
-                        if (spaceCounter == 1 && line.charAt(i) != ' ')minute += line.charAt(i);
+                        if (spaceCounter == 0) hour.append(line.charAt(i));
+                        if (spaceCounter == 1 && line.charAt(i) != ' ') minute.append(line.charAt(i));
                         if (spaceCounter >= 2) {
                             if (line.charAt(i) != ' ') {
-                                second += line.charAt(i);
+                                second.append(line.charAt(i));
 
                             }
 
                             if (i == line.length()) {
-                                second += line.charAt(i);
-                            };
+                                second.append(line.charAt(i));
+                            }
+                            ;
 
                         }
 
                     }
-                    MyTime T = new MyTime(Integer.parseInt(hour), Integer.parseInt(minute), Integer.parseInt(second));
+                    MyTime T = new MyTime(Integer.parseInt(hour.toString()), Integer.parseInt(minute.toString()), Integer.parseInt(second.toString()));
                     arr.add(T);
                     arrPos += 1;
                 }
