@@ -1,3 +1,10 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+
+
 public class Main {
     public static class MyTime
     {
@@ -76,19 +83,112 @@ public class Main {
 
             System.out.println( h + ":" + m + ":" + s ) ;
         }
+        String ReturnFormattedTime() {
+            String h, m, s, formattedTime;
+            if (hourTime < 10) {
+                h = "0" + String.valueOf(hourTime);
+            }
+            else {
+                h = "" + String.valueOf(hourTime);
+            }
+            if (minuteTime < 10) {
+                m = "0" + String.valueOf(minuteTime);
+            }
+            else {
+                m = "" + String.valueOf(minuteTime);
+            }
+            if (secondTime < 10) {
+                s = "0" + String.valueOf(secondTime);
+            }
+            else {
+                s = "" + String.valueOf(secondTime);
+            }
+            formattedTime = h + " " + m + " " + s;
+            return formattedTime;
+        }
 
     };
-    public static void main(String[] args) {
+
+    static List<MyTime> diskIn() throws FileNotFoundException {
+        List<MyTime> arr = new ArrayList<>();
+        int arrPos = 0;
+
+        try(FileReader fin = new FileReader("input.txt")) {
+            Scanner Reader = new Scanner(fin);
+            ArrayList<String> check = new ArrayList<String>();
+            while (Reader.hasNextLine()) {
+                String data = Reader.nextLine();
+                check.add(data);
+            }
+            System.out.println("Все ОК! Файл открыт!\n\n");
+
+            for (int nline=0; nline < check.size(); nline++ )
+            {
+                String line = check.get(nline);
+                String hour = "";
+                String minute = "";
+                String second = "";
+                int spaceCounter = 0;
+                if (line.charAt(0) != ' ' /*&& line.charAt(0) != NULL*/) {
+                    for (int i = 0; i < line.length(); i++)
+                    {
+                        if (line.charAt(i) == ' ') spaceCounter += 1;
+                        if (spaceCounter == 0)hour += line.charAt(i);
+                        if (spaceCounter == 1 && line.charAt(i) != ' ')minute += line.charAt(i);
+                        if (spaceCounter >= 2) {
+                            if (line.charAt(i) != ' ') {
+                                second += line.charAt(i);
+
+                            }
+
+                            if (i == line.length()) {
+                                second += line.charAt(i);
+                            };
+
+                        }
+
+                    }
+                    MyTime T = new MyTime(Integer.parseInt(hour), Integer.parseInt(minute), Integer.parseInt(second));
+                    arr.add(T);
+                    arrPos += 1;
+                }
+
+
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return arr;
+    }
+
+    public static void diskOut(List<MyTime> array) throws IOException {
+        try(FileWriter fout = new FileWriter("output.txt")){
+            for(MyTime x: array){
+                fout.write(x.ReturnFormattedTime() + "\n");
+            }
+
+
+
+        }
+
+    }
+    public static void main(String[] args) throws IOException {
 
         MyTime T = new MyTime(23, 59, 50);
 
-        T.PrintTime();
+        /*T.PrintTime();
         T.Add5Seconds();
         T.PrintTime();
         T.Add5Seconds();
         T.PrintTime();
         T.Add5Seconds();
         T.PrintTime();
-        System.out.println(T.GetAllInSeconds());
+        System.out.println(T.GetAllInSeconds());*/
+        List<MyTime> a = diskIn();
+        for (MyTime x : a) {
+            x.PrintTime();
+        }
+        diskOut(a);
     }
 }
